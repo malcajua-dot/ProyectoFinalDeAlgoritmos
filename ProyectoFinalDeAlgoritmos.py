@@ -98,6 +98,35 @@ def SolucionBruta(PRODUCTOS = []):
   print(f"Valor total: {mejor_valor}")
   print("xvx"*15)
 
+def SolucionVoraz(PRODUCTOS=[]):
+    if len(PRODUCTOS) == 0:
+        return []
+
+    # Ordenar los objetos por mayor relación valor/peso
+    productos_ordenados = sorted(
+        PRODUCTOS,
+        key=lambda objeto: objeto['VALOR'] / objeto['PESO'],
+        reverse=True
+    )
+
+    peso_total = 0
+    valor_total = 0
+    mejor_combinacion = []
+
+    for objeto in productos_ordenados:
+        if peso_total + objeto['PESO'] <= pesoMaximo:
+            mejor_combinacion.append(objeto)
+            peso_total += objeto['PESO']
+            valor_total += objeto['VALOR']
+
+    print("Solución Voraz:")
+    for objeto in mejor_combinacion:
+        print(objeto)
+
+    print(f"Peso total: {peso_total}")
+    print(f"Valor total: {valor_total}")
+    print("xvx" * 15)
+
 #Yo bruss escribi algo en esta rama, si puedes verla me confirmas
 
 

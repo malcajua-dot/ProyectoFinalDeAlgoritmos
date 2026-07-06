@@ -97,5 +97,42 @@ def SolucionBruta(PRODUCTOS = []):
   print(f"Peso total: {mejor_peso}")
   print(f"Valor total: {mejor_valor}")
   print("xvx"*15)
-    
+def SolucionDP(PRODUCTOS=[]):
+  """
+  Programacion dinamica: construye una tabla dp[i][w] = mejor valor posible
+  usando los primeros i objetos con capacidad w.
+  """
+  if len(PRODUCTOS) == 0:
+    return [], 0, 0
+
+  FACTOR = 10
+  capacidad = int(round(pesoMaximo * FACTOR))
+  n = len(PRODUCTOS)
+
+  pesos = [int(round(obj['PESO'] * FACTOR)) for obj in PRODUCTOS]
+  valores = [obj['VALOR'] for obj in PRODUCTOS]
+
+  dp = [[0] * (capacidad + 1) for _ in range(n + 1)]
+
+  for i in range(1, n + 1):
+    peso_i = pesos[i - 1]
+    valor_i = valores[i - 1]
+    for w in range(capacidad + 1):
+      dp[i][w] = dp[i - 1][w]
+      if peso_i <= w:
+        dp[i][w] = max(dp[i][w], dp[i - 1][w - peso_i] + valor_i)
+
+  mejor_valor = dp[n][capacidad]
+
+  mejor_combinacion = []
+  w = capacidad
+  for i in range(n, 0, -1):
+    if dp[i][w] != dp[i - 1][w]:
+      mejor_combinacion.append(PRODUCTOS[i - 1])
+      w -= pesos[i - 1]
+
+  mejor_combinacion.reverse()
+  mejor_peso = sum(obj['PESO'] for obj in mejor_combinacion)
+
+  return mejor_combinacion, mejor_peso, mejor_valor
 
